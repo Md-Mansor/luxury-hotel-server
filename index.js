@@ -10,16 +10,16 @@ const port = process.env.port || 5000;
 // middleware
 
 app.use(cors());
-app.use(express());
+app.use(express.json());
 
 
 
-// JakXe0abH1YQK2No
+// bUQPNGsSKdWgIQPs
 // accommodation 
 
 
 
-const uri = "mongodb+srv://accommodation:JakXe0abH1YQK2No@cluster0.wyk3bvm.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://accommodation:bUQPNGsSKdWgIQPs@cluster0.xl4aigt.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -32,14 +32,35 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
+        // await client.connect();
+
+
+
+        const roomCollection = client.db('roomDB').collection('rooms');
+
+
+        app.get('/room', async (req, res) => {
+            const cursor = roomCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+            console.log(result);
+        })
+
+        app.post('/room', async (req, res) => {
+            const newRoom = req.body;
+            const result = await roomCollection.insertOne(newRoom);
+            res.send(result);
+            console.log(result);
+        })
+
+
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        // await client.close();    
     }
 }
 run().catch(console.dir);
@@ -47,16 +68,8 @@ run().catch(console.dir);
 
 
 
-
-
-
-
-
-
-
-
 app.get('/', (req, res) => {
-    res.send('assignment-0004 is running  ')
+    res.send('assignment-0004 is running')
 
 })
 app.listen(port, () => {
