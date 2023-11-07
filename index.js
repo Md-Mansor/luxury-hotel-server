@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.port || 5000;
 
@@ -38,12 +38,31 @@ async function run() {
 
         const roomCollection = client.db('roomDB').collection('rooms');
 
+        // app.get('/data/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     console.log('req for this brand product: ', id);
+        //     const query = { _id: new ObjectId(id) };
+        //     const result = await dataCollection.findOne(query)
+        //     res.send(result)
+        // })
+
+
+
+        app.get('/roomDetails/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log('req for id', id);
+            const query = { _id: new ObjectId(id) };
+            const result = await roomCollection.findOne(query);
+            console.log(result);
+            res.send(result)
+        })
+
 
         app.get('/room', async (req, res) => {
             const cursor = roomCollection.find();
             const result = await cursor.toArray();
             res.send(result)
-            console.log(result);
+            // console.log(result);
         })
 
         app.post('/room', async (req, res) => {
