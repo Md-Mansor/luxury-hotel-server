@@ -37,7 +37,8 @@ async function run() {
 
 
         const roomCollection = client.db('roomDB').collection('rooms');
-        const orderCollection = client.db('roomDB').collection('booked')
+        const orderCollection = client.db('roomDB').collection('booked');
+        const bannerCollection = client.db('roomDB').collection('banner')
 
         // app.get('/data/:id', async (req, res) => {
         //     const id = req.params.id;
@@ -97,7 +98,7 @@ async function run() {
             console.log('req for id', id);
             const query = { _id: new ObjectId(id) };
             const result = await roomCollection.findOne(query);
-            console.log(result);
+            // console.log(result);
             res.send(result)
         })
 
@@ -115,7 +116,20 @@ async function run() {
             const newRoom = req.body;
             const result = await roomCollection.insertOne(newRoom);
             res.send(result);
-            console.log(result);
+            // console.log(result);
+        })
+
+        app.get('/homeBanner', async (req, res) => {
+            const cursor = bannerCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
+        app.post('/homeBanner', async (req, res) => {
+            const newBanner = req.body;
+            const result = await bannerCollection.insertOne(newBanner);
+            res.send(result);
+            // console.log(result);
         })
 
 
