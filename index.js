@@ -56,11 +56,14 @@ async function run() {
             res.send(result)
             console.log(result);
         })
+
+        // get booked room data
+
         app.get('/booked', async (req, res) => {
             console.log(req.query.Email);
             let query = {};
             if (req.query?.Email) {
-                query = { email: req.query.Email }
+                query = { Email: req.query.Email }
             }
             const result = await orderCollection.find(query).toArray();
             res.send(result)
@@ -74,6 +77,19 @@ async function run() {
             const result = await orderCollection.insertOne(booked);
             res.send(result)
         })
+        app.delete('/booked/:id', async (req, res) => {
+            const id = req.params.id;
+
+            const query = { _id: new ObjectId(id) }
+            const result = await orderCollection.deleteOne(query);
+            if (result.deletedCount === 1) {
+                res.json({ success: true, message: 'Item deleted' }); // Fixed typo: 'message' instead of 'massage'
+            } else {
+                res.json({ success: false, message: 'Item not found or not deleted' });
+            }
+        });
+
+
 
 
         app.get('/roomDetails/:id', async (req, res) => {
@@ -84,6 +100,8 @@ async function run() {
             console.log(result);
             res.send(result)
         })
+
+
 
 
         app.get('/room', async (req, res) => {
