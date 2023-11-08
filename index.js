@@ -37,6 +37,7 @@ async function run() {
 
 
         const roomCollection = client.db('roomDB').collection('rooms');
+        const orderCollection = client.db('roomDB').collection('booked')
 
         // app.get('/data/:id', async (req, res) => {
         //     const id = req.params.id;
@@ -45,7 +46,34 @@ async function run() {
         //     const result = await dataCollection.findOne(query)
         //     res.send(result)
         // })
+        app.get("/bookingForm/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const options = {
+                projection: { Title: 1, Price: 1, Size: 1 },
+            };
+            const result = await roomCollection.findOne(query, options)
+            res.send(result)
+            console.log(result);
+        })
+        app.get('/booked', async (req, res) => {
+            console.log(req.query.Email);
+            let query = {};
+            if (req.query?.Email) {
+                query = { email: req.query.Email }
+            }
+            const result = await orderCollection.find(query).toArray();
+            res.send(result)
+        })
 
+
+        // booked
+        app.post('/booked', async (req, res) => {
+            const booked = (req.body);
+            console.log(booked);
+            const result = await orderCollection.insertOne(booked);
+            res.send(result)
+        })
 
 
         app.get('/roomDetails/:id', async (req, res) => {
