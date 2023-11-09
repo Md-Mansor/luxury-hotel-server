@@ -9,7 +9,10 @@ const port = process.env.port || 5000;
 
 // middleware
 
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: ["https://meaty-cloth.surge.sh"]
+}));
 app.use(express.json());
 
 
@@ -108,6 +111,7 @@ async function run() {
         app.get('/room', async (req, res) => {
             const cursor = roomCollection.find();
             const result = await cursor.toArray();
+            console.log(result);
             res.send(result)
             // console.log(result);
         })
