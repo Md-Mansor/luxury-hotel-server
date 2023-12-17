@@ -11,7 +11,7 @@ const port = process.env.port || 5000;
 
 app.use(cors({
     credentials: true,
-    origin: ["https://meaty-cloth.surge.sh", "http://localhost:5173"]
+    origin: ["http://localhost:5173"]
 }));
 app.use(express.json());
 
